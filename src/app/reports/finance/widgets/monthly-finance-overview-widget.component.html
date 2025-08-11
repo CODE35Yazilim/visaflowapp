@@ -1,0 +1,15 @@
+<div class="card" *ngIf="chartOptions">
+  <div class="card-body">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [plotOptions]="chartOptions.plotOptions"
+      [dataLabels]="chartOptions.dataLabels"
+      [stroke]="chartOptions.stroke"
+      [fill]="chartOptions.fill"
+      [tooltip]="chartOptions.tooltip"
+      [legend]="chartOptions.legend"
+    ></apx-chart>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<abp-page [title]="'::Menu:ProcessReports' | abpLocalization">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="formFilters" (ngSubmit)="refresh()">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <abp-date-range-picker
+              formControlName="times"
+              [labelText]="'::Date' | abpLocalization"
+              startDateProp="fromDate"
+              endDateProp="toDate">
+            </abp-date-range-picker>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fa fa-refresh me-1"></i>
+              {{ '::Refresh' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+   <div class="row mt-4">
+    <div class="col-lg-12">
+      <app-processing-time-widget #processingTimeWidget></app-processing-time-widget>
+    </div>
+  </div>
+  
+
+  <div class="row">
+    <div class="col col-md-12 col-lg-6" *abpPermission="'Saas.Tenants'">
+        <app-country-report-widget #countryReportWidget [height]="300"></app-country-report-widget>
+      </div>
+
+      <div class="col col-md-12 col-lg-6" *abpPermission="'Saas.Tenants'">
+        <app-visa-type-report-widget #visaTypeReportWidget [height]="300"></app-visa-type-report-widget>
+      </div>
+  </div>
+
+ 
+
+  
+
+  
+</abp-page>

@@ -1,0 +1,87 @@
+<abp-modal [busy]="service.isBusy" [(visible)]="service.isVisible">
+  <ng-template #abpHeader>
+    <h3>
+      {{ 
+        service.mode === 'convert' 
+          ? '::CurrencyConvert' 
+        : service.mode === 'cost' 
+          ? '::NewCost' 
+        : '::NewCollection' 
+      | abpLocalization }}
+    </h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <form
+      [formGroup]="service.form"
+      id="transaction"
+      (ngSubmit)="service.submitForm()"
+      validateOnSubmit
+    >
+
+      <ng-container [ngSwitch]="service.mode">
+        <!-- ▶ COLLECTION / COST: sadece Amount + Currency -->
+        <ng-container *ngSwitchCase="'collection'">
+          <div class="mb-3">
+            <label class="form-label">{{ '::Amount' | abpLocalization }} *</label>
+            <input type="number" formControlName="amount" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ '::Currency' | abpLocalization }} *</label>
+            <abp-lookup-select
+              formControlName="currencyId"
+              [getFn]="service.getCurrencyLookup"
+            ></abp-lookup-select>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'cost'">
+          <div class="mb-3">
+            <label class="form-label">{{ '::Amount' | abpLocalization }} *</label>
+            <input type="number" formControlName="amount" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ '::Currency' | abpLocalization }} *</label>
+            <abp-lookup-select
+              formControlName="currencyId"
+              [getFn]="service.getCurrencyLookup"
+            ></abp-lookup-select>
+          </div>
+        </ng-container>
+
+        <!-- ▶ CONVERT: iki döviz + rate + mainAmount + sourceAmount -->
+        <ng-container *ngSwitchCase="'convert'">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">{{ '::SourceCurrency' | abpLocalization }} *</label>
+              <abp-lookup-select
+                formControlName="sourceCurrencyId"
+                [getFn]="service.getCurrencyLookup"
+              ></abp-lookup-select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{ '::TargetCurrency' | abpLocalization }} *</label>
+              <abp-lookup-select
+                formControlName="targetCurrencyId"
+                [getFn]="service.getCurrencyLookup"
+              ></abp-lookup-select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">{{ '::Amount' | abpLocalization }} *</label>
+              <input type="number" formControlName="amount" class="form-control" />
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <abp-button iconClass="fa fa-check" buttonType="submit" formName="transaction">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+  </ng-template>
+</abp-modal>

@@ -1,0 +1,39 @@
+<abp-page [title]="'::Menu:FinancialReports' | abpLocalization">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="formFilters" (ngSubmit)="refresh()">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <abp-date-range-picker
+              formControlName="times"
+              [labelText]="'::Date' | abpLocalization"
+              startDateProp="fromDate"
+              endDateProp="toDate">
+            </abp-date-range-picker>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fa fa-refresh me-1"></i>
+              {{ '::Refresh' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+</div>
+
+
+<div id="DashboardWidgetsArea">
+    <div class="row">
+      <div class="col col-md-12 col-lg-6">
+          <app-monthly-finance-overview-widget #monthlyFinanceOverviewWidget [height]="300"></app-monthly-finance-overview-widget>
+      </div>
+
+      <div class="col col-md-12 col-lg-6">
+          <app-finance-pie-chart-widget #financePieChartWidget [height]="300"></app-finance-pie-chart-widget>
+      </div>
+
+      
+    </div>
+  </div>
+</abp-page>

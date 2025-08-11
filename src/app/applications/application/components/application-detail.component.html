@@ -1,0 +1,279 @@
+<abp-modal
+  [busy]="service.isBusy"
+  [(visible)]="service.isVisible"
+  [options]="{ size: 'lg' }"
+  scrollable
+>
+  <ng-template #abpHeader>
+    <h3>
+      {{
+        service.reservationMode
+          ? ('::AddReservation' | abpLocalization)
+          : (service.selected ? 'AbpUi::Edit' : '::NewApplication') | abpLocalization
+      }}
+    </h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    
+    <form
+      [formGroup]="service.form"
+      id="application"
+      (ngSubmit)="service.submitForm()"
+      validateOnSubmit
+    >
+      <!-- RESERVATION MODE -->
+      <ng-container *ngIf="service.reservationMode; else normalMode">
+        <div class="mt-3 mb-3">
+          <label class="form-label" for="application-reservation-date">
+            {{ '::ReservationDate' | abpLocalization }} *
+          </label>
+          <div class="input-group" validationTarget>
+          <input
+              readonly
+              id="application-reservation-date"
+              formControlName="reservationDate"
+              class="form-control"
+              ngbDatepicker
+              #reservationDateInput
+              #reservationDateDatepicker="ngbDatepicker"
+              (click)="reservationDateDatepicker.open()"
+              (keyup.space)="reservationDateDatepicker.open()"
+            />
+            <div class="input-group-append" *ngIf="reservationDateInput.value">
+              <button
+                class="btn btn-link px-2"
+                type="button"
+                [title]="'AbpUi::Clear' | abpLocalization"
+                (click)="
+                  reservationDateDatepicker.writeValue(null);
+                  reservationDateDatepicker.manualDateChange(null, true)
+                "
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <abp-validation-summary controlName="reservationDate"></abp-validation-summary>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="application-reservation-time">
+            {{ '::ReservationTime' | abpLocalization }}
+          </label>
+          <input
+            type="time"
+            class="form-control"
+            formControlName="reservationTime"
+            step="60"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="application-tracking-code">
+            {{ '::TrackingCode' | abpLocalization }} *
+          </label>
+          <input
+            id="application-tracking-code"
+            formControlName="trackingCode"
+            class="form-control"
+          />
+          <abp-validation-summary controlName="trackingCode"></abp-validation-summary>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="application-notes">
+            {{ '::Notes' | abpLocalization }}
+          </label>
+          <textarea
+            id="application-notes"
+            formControlName="notes"
+            class="form-control"
+            rows="3"
+          ></textarea>
+        </div>
+      </ng-container>
+
+      
+      <!-- NORMAL MODE -->
+      <ng-template #normalMode>
+        <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
+          <li ngbNavItem>
+            <a ngbNavLink>{{ '::Application' | abpLocalization }}</a>
+            <ng-template ngbNavContent>
+              <div class="p-3">
+                <!-- CREATE alanları (service.selected yoksa) -->
+                <div class="mb-3" *ngIf="!service.selected">
+                  <label class="form-label">{{ '::Customer' | abpLocalization }} *</label>
+                  <abp-lookup-typeahead
+                    cid="application-customer-id"
+                    formControlName="customerId"
+                    displayNameProp="displayName"
+                    [getFn]="service.getCustomerLookup"
+                    [editingData]="service.selected?.customer"
+                  ></abp-lookup-typeahead>
+                </div>
+
+                <div class="mb-3" *ngIf="!service.selected">
+                  <label class="form-label">{{ '::Country' | abpLocalization }} *</label>
+                  <abp-lookup-select
+                    cid="application-country-id"
+                    formControlName="countryId"
+                    [getFn]="service.getCountryLookup"
+                  ></abp-lookup-select>
+                </div>
+
+                <div class="mb-3" *ngIf="!service.selected">
+                  <label class="form-label">{{ '::Source' | abpLocalization }} *</label>
+                  <abp-lookup-input
+                    cid="application-source-id"
+                    formControlName="sourceId"
+                    displayNameProp="shortName"
+                    lookupNameProp="displayName"
+                    [getFn]="service.getSourceLookup"
+                    [editingData]="service.selected?.source"
+                  ></abp-lookup-input>
+                </div>
+
+                <div class="mb-3" *ngIf="!service.selected">
+                  <label class="form-label">{{ '::OutSource' | abpLocalization }} *</label>
+                  <abp-lookup-input
+                    cid="application-out-source-id"
+                    formControlName="outSourceId"
+                    displayNameProp="shortName"
+                    lookupNameProp="displayName"
+                    [getFn]="service.getOutSourceLookup"
+                    [editingData]="service.selected?.outSource"
+                  ></abp-lookup-input>
+                </div>
+
+                <div class="mb-3" *ngIf="!service.selected">
+                  <label class="form-label">{{ '::Product' | abpLocalization }} *</label>
+                  <abp-lookup-input
+                    cid="application-main-product-id"
+                    formControlName="mainProductId"
+                    displayNameProp="shortName"
+                    lookupNameProp="displayName"
+                    [getFn]="service.getMainProductLookup"
+                    [editingData]="service.selected?.mainProduct"
+                  ></abp-lookup-input>
+                </div>
+
+                <div class="form-check mb-3" *ngIf="!service.selected">
+                  <input
+                    type="checkbox"
+                    id="application-has-invoice"
+                    formControlName="hasInvoice"
+                    class="form-check-input"
+                  />
+                  <label for="application-has-invoice" class="form-check-label">
+                    {{ '::HasInvoice' | abpLocalization }}
+                  </label>
+                </div>
+
+                <div class="row g-3" *ngIf="!service.selected">
+                  <div class="col-md-6">
+                    <label class="form-label">{{ '::Currency' | abpLocalization }} *</label>
+                    <abp-lookup-select
+                      cid="application-currency-id"
+                      formControlName="currencyId"
+                      [getFn]="service.getCurrencyLookup"
+                    ></abp-lookup-select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">{{ '::Amount' | abpLocalization }} *</label>
+                    <input
+                      type="number"
+                      formControlName="amount"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
+                <!-- EDIT alanları -->
+                <div class="mt-3 mb-3" *ngIf="!!service.selected">
+                  <label class="form-label" for="application-reservation-date">
+                    {{ '::ReservationDate' | abpLocalization }}
+                  </label>
+                  <div class="input-group" validationTarget>
+                    <input
+                      readonly
+                      id="application-reservation-date"
+                      formControlName="reservationDate"
+                      class="form-control"
+                      ngbDatepicker
+                      #reservationDateInput
+                      #reservationDateDatepicker="ngbDatepicker"
+                      (click)="reservationDateDatepicker.open()"
+                      (keyup.space)="reservationDateDatepicker.open()"
+                    />
+                    <div class="input-group-append" *ngIf="reservationDateInput.value">
+                      <button
+                        class="btn btn-link px-2"
+                        type="button"
+                        [title]="'AbpUi::Clear' | abpLocalization"
+                        (click)="
+                          reservationDateDatepicker.writeValue(null);
+                          reservationDateDatepicker.manualDateChange(null, true)
+                        "
+                      >
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3" *ngIf="!!service.selected">
+                  <label class="form-label" for="application-reservation-time">
+                    {{ '::ReservationTime' | abpLocalization }}
+                  </label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    formControlName="reservationTime"
+                    step="60"
+                  />
+                </div>
+
+                <div class="mt-3 mb-3" *ngIf="!!service.selected">
+                  <label class="form-label" for="application-tracking-code">
+                    {{ '::TrackingCode' | abpLocalization }}
+                  </label>
+                  <input
+                    id="application-tracking-code"
+                    formControlName="trackingCode"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="mb-3" *ngIf="!!service.selected">
+                  <label class="form-label" for="application-notes">
+                    {{ '::Notes' | abpLocalization }}
+                  </label>
+                  <textarea
+                    id="application-notes"
+                    formControlName="notes"
+                    class="form-control"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-3"></div>
+      </ng-template>
+      
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button class="btn btn-secondary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <abp-button iconClass="fa fa-check" buttonType="submit" formName="application">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+  </ng-template>
+</abp-modal>

@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-body">
+    <canvas baseChart [data]="chartData" [type]="'line'" [height]="height"></canvas>
+  </div>
+</div>
+
+<div class="table-responsive mt-3">
+  <table class="table table-bordered table-sm table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Tarih</th>
+        <th>Yeni Kullanıcılar</th>
+        <th>Yeni Başvurular</th>
+        <th>Yeni Ödemeler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of tableData">
+        <td>{{ row.date }}</td>
+        <td>{{ row.newUsers }}</td>
+        <td>{{ row.newApplications }}</td>
+        <td>{{ row.newPayments }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

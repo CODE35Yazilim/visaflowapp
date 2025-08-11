@@ -1,0 +1,146 @@
+<abp-modal [busy]="service.isBusy" [(visible)]="service.isVisible">
+  <ng-template #abpHeader>
+    <!--<suite-custom-code-block-0>-->
+    <!--</suite-custom-code-block-0>-->
+    <h3>
+      <!--<suite-custom-code-block-1>-->
+      <!--</suite-custom-code-block-1>-->
+      {{ (service.selected ? 'AbpUi::Edit' : '::NewVisa') | abpLocalization }}
+      <!--<suite-custom-code-block-2>-->
+      <!--</suite-custom-code-block-2>-->
+    </h3>
+    <!--<suite-custom-code-block-3>-->
+    <!--</suite-custom-code-block-3>-->
+  </ng-template>
+
+  <ng-template #abpBody>
+    <!--<suite-custom-code-block-4>-->
+    <!--</suite-custom-code-block-4>-->
+    <form [formGroup]="service.form" id="visa" (ngSubmit)="service.submitForm()" validateOnSubmit>
+      <!--<suite-custom-code-block-5>-->
+      <!--</suite-custom-code-block-5>-->
+
+      <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <li ngbNavItem>
+          <a ngbNavLink>
+            {{ '::Visa' | abpLocalization }}
+          </a>
+          <ng-template ngbNavContent>
+            <div class="mt-2 fade-in-top">
+              <div class="mb-3">
+                <label class="form-label" for="visa-visa-status">
+                  {{ '::VisaStatus' | abpLocalization }}
+                </label>
+
+                <select
+                  id="visa-visa-status"
+                  formControlName="visaStatus"
+                  class="form-select form-control"
+                >
+                  <option [ngValue]="null"></option>
+                  <option
+                    *ngFor="
+                      let option of service.visaStatusOptions;
+                      trackBy: service.track.by('key')
+                    "
+                    [ngValue]="option.value"
+                  >
+                    {{ '::Enum:VisaStatus.' + option.value | abpLocalization }}
+                  </option>
+                </select>
+              </div>
+
+              <ng-container *ngIf="service.form?.get('visaStatus')?.value === 1">
+  <div class="mb-3">
+    <label class="form-label" for="app-visas-start-date">
+      {{ '::StartDate' | abpLocalization }}
+    </label>
+    <div class="input-group" validationTarget>
+      <input
+        readonly
+        id="app-visas-start-date"
+        formControlName="startDate"
+        class="form-control"
+        ngbDatepicker
+        #startDateInput
+        #startDateDatepicker="ngbDatepicker"
+        (click)="startDateDatepicker.open()"
+        (keyup.space)="startDateDatepicker.open()"
+        autofocus
+      />
+      <div *ngIf="startDateInput.value" class="input-group-append">
+        <button
+          class="btn btn-link px-2"
+          type="button"
+          [title]="'AbpUi::Clear' | abpLocalization"
+          (click)="
+            startDateDatepicker.writeValue(null);
+            startDateDatepicker.manualDateChange(null, true)
+          "
+        >
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="app-visas-valid-date">
+      {{ '::ValidDate' | abpLocalization }}
+    </label>
+    <div class="input-group" validationTarget>
+      <input
+        readonly
+        id="app-visas-valid-date"
+        formControlName="validDate"
+        class="form-control"
+        ngbDatepicker
+        #validDateInput
+        #validDateDatepicker="ngbDatepicker"
+        (click)="validDateDatepicker.open()"
+        (keyup.space)="validDateDatepicker.open()"
+      />
+      <div *ngIf="validDateInput.value" class="input-group-append">
+        <button
+          class="btn btn-link px-2"
+          type="button"
+          [title]="'AbpUi::Clear' | abpLocalization"
+          (click)="
+            validDateDatepicker.writeValue(null);
+            validDateDatepicker.manualDateChange(null, true)
+          "
+        >
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+              
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav"></div>
+
+      <!--<suite-custom-code-block-6>-->
+      <!--</suite-custom-code-block-6>-->
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <!--<suite-custom-code-block-7>-->
+    <!--</suite-custom-code-block-7>-->
+    <button type="button" class="btn btn-secondary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <!--<suite-custom-code-block-8>-->
+    <!--</suite-custom-code-block-8>-->
+    <abp-button iconClass="fa fa-check" buttonType="submit" formName="visa">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+    <!--<suite-custom-code-block-9>-->
+    <!--</suite-custom-code-block-9>-->
+  </ng-template>
+</abp-modal>

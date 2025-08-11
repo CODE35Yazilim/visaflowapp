@@ -1,0 +1,30 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row text-center" *ngIf="summary as s">
+      <div class="col-md-2">
+        <h5>{{ s.totalApplications }}</h5>
+        <p>Toplam Başvuru</p>
+      </div>
+      <div class="col-md-2">
+        <h5>{{ s.inProgressCount }}</h5>
+        <p>İşlemde</p>
+      </div>
+      <div class="col-md-2">
+        <h5>{{ s.waitingDocumentCount }}</h5>
+        <p>Belge Bekleyen</p>
+      </div>
+      <div class="col-md-2">
+        <h5>{{ s.waitingAppointmentCount }}</h5>
+        <p>Randevu Bekleyen</p>
+      </div>
+      <div class="col-md-2">
+        <h5>{{ s.endedOrCanceledCount }}</h5>
+        <p>Tamamlanan / İptal</p>
+      </div>
+      <div class="col-md-2">
+        <h5>{{ s.averageEndDurationDays | number: '1.0-0' }}</h5>
+        <p>Ortalama Süre (gün)</p>
+      </div>
+    </div>
+  </div>
+</div>

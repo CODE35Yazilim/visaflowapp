@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-body text-center">
+    <apx-chart
+      *ngIf="chartOptions.series?.length"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"
+      [legend]="chartOptions.legend"
+      class="d-block mx-auto"
+      style="max-width: 100%; min-width: 300px;">
+    </apx-chart>
+  </div>
+</div>

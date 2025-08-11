@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-body">
+    <apx-chart
+      *ngIf="chartOptions.series"
+      [series]="chartOptions.series"
+      [labels]="chartOptions.labels"
+      [chart]="chartOptions.chart"
+      [legend]="chartOptions.legend"
+      [tooltip]="chartOptions.tooltip"
+      [responsive]="chartOptions.responsive"
+      [height]="chartOptions.chart?.height">
+    </apx-chart>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="text-lg-end py-1">
+  <!--<suite-custom-code-block-0>-->
+  <!--</suite-custom-code-block-0>-->
+  <button
+    *abpPermission="'VisaFlowApp.Passports.Create'"
+    class="btn btn-primary btn-sm"
+    type="button"
+    (click)="create()"
+  >
+    <i class="fa fa-plus me-1" aria-hidden="true"></i>
+    {{ '::NewPassport' | abpLocalization }}
+  </button>
+  <!--<suite-custom-code-block-1>-->
+  <!--</suite-custom-code-block-1>-->
+</div>
+<!--<suite-custom-code-block-2>-->
+<!--</suite-custom-code-block-2>-->
+<ngx-datatable default [list]="list" [rows]="service.data.items" [count]="service.data.totalCount">
+  @if (isActionButtonVisible) {
+    <ngx-datatable-column
+      [name]="'AbpUi::Actions' | abpLocalization"
+      [maxWidth]="150"
+      [width]="150"
+      [sortable]="false"
+    >
+      <ng-template let-row="row" let-i="rowIndex" ngx-datatable-cell-template>
+        <div ngbDropdown container="body" class="d-inline-block">
+          <button
+            class="btn btn-primary btn-sm dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            ngbDropdownToggle
+          >
+            <i class="fa fa-cog me-1" aria-hidden="true"></i>
+            {{ 'AbpUi::Actions' | abpLocalization }}
+          </button>
+
+          <div ngbDropdownMenu>
+            <button
+              ngbDropdownItem
+              *abpPermission="'VisaFlowApp.Passports.Edit'"
+              (click)="update(row)"
+            >
+              {{ 'AbpUi::Edit' | abpLocalization }}
+            </button>
+
+            <button
+              ngbDropdownItem
+              *abpPermission="'VisaFlowApp.Passports.Delete'"
+              (click)="delete(row)"
+            >
+              {{ 'AbpUi::Delete' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+      <!--<suite-custom-code-block-3>-->
+      <!--</suite-custom-code-block-3>-->
+    </ngx-datatable-column>
+  }
+  <ngx-datatable-column name="{{ '::Number' | abpLocalization }}" prop="number">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      {{ row.number }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ '::IsMain' | abpLocalization }}" prop="isMain">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      <ng-template [ngIf]="row.isMain" [ngIfThen]="yes" [ngIfElse]="no"></ng-template>
+
+      <ng-template #yes>
+        <div class="text-success">
+          <span [title]="'AbpUi::Yes' | abpLocalization">
+            <i class="fa fa-check" aria-hidden="true"></i>
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template #no>
+        <div class="text-danger">
+          <span [title]="'AbpUi::No' | abpLocalization">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </span>
+        </div>
+      </ng-template>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ '::StartDate' | abpLocalization }}" prop="startDate">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      {{ row.startDate | date }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ '::ValidDate' | abpLocalization }}" prop="validDate">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      {{ row.validDate | date }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ '::IssuedBy' | abpLocalization }}" prop="issuedBy">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      {{ row.issuedBy }}
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="{{ '::State' | abpLocalization }}" prop="state">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      {{ row.state }}
+    </ng-template>
+  </ngx-datatable-column>
+  <!--<suite-custom-code-block-4>-->
+  <!--</suite-custom-code-block-4>-->
+</ngx-datatable>
+
+<!--<suite-custom-code-block-5>-->
+<!--</suite-custom-code-block-5>-->
+
+@defer (when serviceDetail.isVisible) {
+  @if (serviceDetail.isVisible) {
+    <app-passport-detail-modal />
+  }
+}

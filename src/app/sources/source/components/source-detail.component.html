@@ -1,0 +1,134 @@
+<abp-modal [busy]="service.isBusy" [(visible)]="service.isVisible">
+  <ng-template #abpHeader>
+    <!--<suite-custom-code-block-0>-->
+    <!--</suite-custom-code-block-0>-->
+    <h3>
+      <!--<suite-custom-code-block-1>-->
+      <!--</suite-custom-code-block-1>-->
+      {{ (service.selected ? 'AbpUi::Edit' : '::NewSource') | abpLocalization }}
+      <!--<suite-custom-code-block-2>-->
+      <!--</suite-custom-code-block-2>-->
+    </h3>
+    <!--<suite-custom-code-block-3>-->
+    <!--</suite-custom-code-block-3>-->
+  </ng-template>
+
+  <ng-template #abpBody>
+    <!--<suite-custom-code-block-4>-->
+    <!--</suite-custom-code-block-4>-->
+    <form [formGroup]="service.form" id="source" (ngSubmit)="service.submitForm()" validateOnSubmit>
+      <!--<suite-custom-code-block-5>-->
+      <!--</suite-custom-code-block-5>-->
+
+      <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <li ngbNavItem>
+          <a ngbNavLink>
+            {{ '::Source' | abpLocalization }}
+          </a>
+          <ng-template ngbNavContent>
+            <div class="mt-2 fade-in-top">
+              <div class="mb-3">
+                <label class="form-label" for="source-short-name">
+                  {{ '::ShortName' | abpLocalization }} *
+                </label>
+
+                <input
+                  id="source-short-name"
+                  formControlName="shortName"
+                  class="form-control"
+                  autofocus
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="source-full-name">
+                  {{ '::FullName' | abpLocalization }} *
+                </label>
+
+                <input id="source-full-name" formControlName="fullName" class="form-control" />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="source-phone">
+                  {{ '::Phone' | abpLocalization }} *
+                </label>
+
+                <input id="source-phone" formControlName="phone" class="form-control" />
+              </div>
+
+              <div class="form-check mb-3">
+                <input
+                  type="checkbox"
+                  id="source-is-outsource"
+                  formControlName="isOutsource"
+                  class="form-check-input"
+                />
+
+                <label for="source-is-outsource" class="form-check-label">
+                  {{ '::IsOutsource' | abpLocalization }}
+                </label>
+              </div>
+
+              <div class="form-check mb-3">
+                <input
+                  type="checkbox"
+                  id="source-is-supplier"
+                  formControlName="isSupplier"
+                  class="form-check-input"
+                />
+
+                <label for="source-is-supplier" class="form-check-label">
+                  {{ '::IsSupplier' | abpLocalization }}
+                </label>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="source-address">
+                  {{ '::Address' | abpLocalization }}
+                </label>
+
+                <textarea id="source-address" formControlName="address" class="form-control">
+                </textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="source-tax-no">
+                  {{ '::TaxNo' | abpLocalization }}
+                </label>
+
+                <input id="source-tax-no" formControlName="taxNo" class="form-control" />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="source-tax-office">
+                  {{ '::TaxOffice' | abpLocalization }}
+                </label>
+
+                <input id="source-tax-office" formControlName="taxOffice" class="form-control" />
+              </div>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav"></div>
+
+      <!--<suite-custom-code-block-6>-->
+      <!--</suite-custom-code-block-6>-->
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <!--<suite-custom-code-block-7>-->
+    <!--</suite-custom-code-block-7>-->
+    <button type="button" class="btn btn-secondary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <!--<suite-custom-code-block-8>-->
+    <!--</suite-custom-code-block-8>-->
+    <abp-button iconClass="fa fa-check" buttonType="submit" formName="source">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+    <!--<suite-custom-code-block-9>-->
+    <!--</suite-custom-code-block-9>-->
+  </ng-template>
+</abp-modal>

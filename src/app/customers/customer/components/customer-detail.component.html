@@ -1,0 +1,257 @@
+<abp-modal [busy]="service.isBusy" [(visible)]="service.isVisible"  [options]="{ size: 'lg' }" scrollable>
+  <ng-template #abpHeader>
+    <h3>
+      {{ service && service.selected ? 'AbpUi::EditCustomer' : '::NewCustomer' | abpLocalization }}
+    </h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <form
+      [formGroup]="service.form"
+      id="customer-full-detail"
+      (ngSubmit)="service.submitForm()"
+      validateOnSubmit
+    >
+      <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
+        <!-- Customer Sekmesi -->
+        <li ngbNavItem>
+          <a ngbNavLink>{{ '::Customer' | abpLocalization }}</a>
+          <ng-template ngbNavContent>
+  <div>
+    <!-- Row 1: Sex -->
+    <div class="mb-3 row">
+      <div class="col-md-4">
+        <label class="form-label">{{ '::Sex' | abpLocalization }} *</label>
+        <select formControlName="sex" class="form-select">
+          <option [ngValue]="null">{{ '::Choose' | abpLocalization }}</option>
+          <option
+            *ngFor="let opt of service.customerSexOptions; trackBy: service.track.by('key')"
+            [ngValue]="opt.value"
+          >
+            {{ '::Enum:CustomerSex.' + opt.value | abpLocalization }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 2: Name – MaidenName – Surname -->
+    <div *ngIf="service.form.get('sex').value === CustomerSex.Female" class="mb-3 row g-3">
+              <div class="col-md-4">
+                <label class="form-label">{{ '::Name' | abpLocalization }} *</label>
+                <input formControlName="name" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{ '::MaidenName' | abpLocalization }}</label>
+                <input formControlName="maidenName" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{ '::Surname' | abpLocalization }} *</label>
+                <input formControlName="surname" class="form-control" />
+              </div>
+            </div>
+            <!-- Non-Female: two columns -->
+            <div
+              *ngIf="service.form.get('sex').value !== CustomerSex.Female"
+              class="mb-3 row g-3"
+            >
+              <div class="col-md-6">
+                <label class="form-label">{{ '::Name' | abpLocalization }} *</label>
+                <input formControlName="name" class="form-control" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">{{ '::Surname' | abpLocalization }} *</label>
+                <input formControlName="surname" class="form-control" />
+              </div>
+            </div>
+            
+              <div class="mb-3 row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">{{ '::BirthPlace' | abpLocalization }} *</label>
+                  <input formControlName="birthPlace" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">{{ '::BirthDay' | abpLocalization }}</label>
+                  <div class="input-group" validationTarget>
+                    <input
+                      readonly
+                      formControlName="birthDay"
+                      class="form-control"
+                      ngbDatepicker
+                      #bd="ngbDatepicker"
+                      (click)="bd.open()"
+                    />
+                    <button
+                      *ngIf="service.form.get('birthDay').value"
+                      class="btn btn-link"
+                      type="button"
+                      (click)="bd.writeValue(null); bd.manualDateChange(null, true)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+    
+    <div class="mb-3 row g-3">
+      <div class="col-md-6">
+        <label class="form-label">{{ '::Nationality' | abpLocalization }} *</label>
+        <input formControlName="nationality" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">{{ '::IdentityNo' | abpLocalization }} *</label>
+        <input formControlName="identityNo" class="form-control" />
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+        </li>
+
+        <!-- Passport Sekmesi -->
+        <li ngbNavItem>
+          <a ngbNavLink>{{ '::Passport' | abpLocalization }}</a>
+          <ng-template ngbNavContent>
+            <div formGroupName="passport" class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">{{ '::Number' | abpLocalization }} *</label>
+                <input formControlName="number" class="form-control" />
+              </div>
+              
+              <div class="col-md-4">
+                <label class="form-label">{{ '::IssuedBy' | abpLocalization }} *</label>
+                <input formControlName="issuedBy" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">{{ '::State' | abpLocalization }} *</label>
+                <input formControlName="state" class="form-control" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">{{ '::StartDate' | abpLocalization }}</label>
+                <div class="input-group" validationTarget>
+                  <input
+                    readonly
+                    formControlName="startDate"
+                    class="form-control"
+                    ngbDatepicker
+                    #sd="ngbDatepicker"
+                    (click)="sd.open()"
+                  />
+                  <button
+                    *ngIf="service.form.get('passport.startDate').value"
+                    class="btn btn-link"
+                    type="button"
+                    (click)="sd.writeValue(null); sd.manualDateChange(null, true)"
+                  >
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">{{ '::ValidDate' | abpLocalization }}</label>
+                <div class="input-group" validationTarget>
+                  <input
+                    readonly
+                    formControlName="validDate"
+                    class="form-control"
+                    ngbDatepicker
+                    #vd="ngbDatepicker"
+                    (click)="vd.open()"
+                  />
+                  <button
+                    *ngIf="service.form.get('passport.validDate').value"
+                    class="btn btn-link"
+                    type="button"
+                    (click)="vd.writeValue(null); vd.manualDateChange(null, true)"
+                  >
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+
+        <!-- ContactInfos Sekmesi -->
+        <li ngbNavItem>
+          <a ngbNavLink>{{ '::ContactInfo' | abpLocalization }}</a>
+          <ng-template ngbNavContent>
+            <div class="fade-in-top">
+              <div formArrayName="contactInfos">
+                <div
+                  *ngFor="let grp of service.contactInfos.controls; let i = index"
+                  [formGroupName]="i"
+                  class="row g-3 align-items-end mb-3"
+                >
+                  <!-- Type -->
+                  <div class="col-md-4">
+                    <label class="form-label" for="contact-type-{{i}}">
+                      {{ '::Type' | abpLocalization }} *
+                    </label>
+                    <select
+                      id="contact-type-{{i}}"
+                      formControlName="type"
+                      class="form-select form-control"
+                    >
+                      <option [ngValue]="null"></option>
+                      <option
+                        *ngFor="let opt of service.communicationTypeOptions; trackBy: service.track.by('key')"
+                        [ngValue]="opt.value"
+                      >
+                        {{ '::Enum:CommunicationType.' + opt.value | abpLocalization }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Name -->
+                  <div class="col-md-7">
+                    <label class="form-label" for="contact-name-{{i}}">
+                      {{ '::Name' | abpLocalization }} *
+                    </label>
+                    <input
+                      id="contact-name-{{i}}"
+                      formControlName="name"
+                      class="form-control"
+                    />
+                  </div>
+
+                  <!-- Remove Button -->
+                  <div class="col-md-1 text-end">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger"
+                      (click)="service.removeContactInfo(i)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add New ContactInfo -->
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="service.addContactInfo()"
+              >
+                <i class="fa fa-plus"></i>
+                {{ '::NewContactInfo' | abpLocalization }}
+              </button>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+
+      <div [ngbNavOutlet]="nav" class="mt-4"></div>
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button class="btn btn-secondary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <abp-button iconClass="fa fa-check" buttonType="submit" formName="customer-full-detail">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+  </ng-template>
+</abp-modal>

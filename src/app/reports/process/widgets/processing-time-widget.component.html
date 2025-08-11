@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">İşlem Süresi</h5>
+  </div>
+  <div class="card-body row text-center" *ngIf="data">
+    <div class="col-md-3">
+      <h6 class="text-muted">Toplam</h6>
+      <h3>{{ data.count }}</h3>
+    </div>
+    <div class="col-md-3">
+      <h6 class="text-muted">Ortalama Gün</h6>
+      <h3>{{ data.averageDays | number:'1.0-1' }}</h3>
+    </div>
+    <div class="col-md-3">
+      <h6 class="text-muted">En Az</h6>
+      <h3>{{ data.minDays }}</h3>
+    </div>
+    <div class="col-md-3">
+      <h6 class="text-muted">En Çok</h6>
+      <h3>{{ data.maxDays }}</h3>
+    </div>
+  </div>
+</div>

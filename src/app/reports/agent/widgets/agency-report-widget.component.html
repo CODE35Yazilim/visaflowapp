@@ -1,0 +1,46 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <!-- Chart -->
+      <div class="col-md-6">
+        <apx-chart
+          *ngIf="chartOptions.series"
+          [series]="chartOptions.series"
+          [chart]="chartOptions.chart"
+          [xaxis]="chartOptions.xaxis"
+          [dataLabels]="chartOptions.dataLabels"
+          [legend]="chartOptions.legend"
+          [plotOptions]="chartOptions.plotOptions"
+          [tooltip]="chartOptions.tooltip"
+          [height]="chartOptions.chart?.height">
+        </apx-chart>
+      </div>
+
+      <!-- Table -->
+      <div class="col-md-6">
+        <div class="table-responsive" *ngIf="tableData?.length > 0">
+          <table class="table table-sm table-bordered">
+            <thead>
+              <tr>
+                <th>Acenta</th>
+                <th>Tip</th>
+                <th>Başvuru</th>
+                <th>Kabul</th>
+                <th>Red</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of tableData">
+                <td>{{ row.agencyName }}</td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.totalApplications }}</td>
+                <td>{{ row.accepted }}</td>
+                <td>{{ row.rejected }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

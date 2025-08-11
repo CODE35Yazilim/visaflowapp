@@ -1,0 +1,557 @@
+<abp-page [title]="title | abpLocalization">
+  <abp-page-toolbar-container class="col">
+    <!--<suite-custom-code-block-0>-->
+    <!--</suite-custom-code-block-0>-->
+    <div class="text-lg-end pt-2">
+      <!--<suite-custom-code-block-1>-->
+      <!--</suite-custom-code-block-1>-->
+
+      <button
+        class="btn btn-primary btn-sm mx-2"
+        type="button"
+        [disabled]="service.isExportToExcelBusy"
+        (click)="exportToExcel()"
+      >
+        {{ '::ExportToExcel' | abpLocalization }}
+      </button>
+
+      <button
+        *abpPermission="'VisaFlowApp.Baskets.Create'"
+        class="btn btn-primary btn-sm"
+        type="button"
+        (click)="create()"
+      >
+        <i class="fa fa-plus me-1" aria-hidden="true"></i>
+        {{ '::NewBasket' | abpLocalization }}
+      </button>
+      <!--<suite-custom-code-block-2>-->
+      <!--</suite-custom-code-block-2>-->
+    </div>
+  </abp-page-toolbar-container>
+
+  <abp-advanced-entity-filters localizationSourceName="" [list]="list">
+    @if (service.filters; as filters) {
+      <abp-advanced-entity-filters-form>
+        <form #filterForm (keyup.enter)="list.get()">
+          <!--<suite-custom-code-block-3>-->
+          <!--</suite-custom-code-block-3>-->
+          <div class="row">
+            <div class="col-12 col-sm-auto">
+              <div class="mb-3">
+                <label class="form-label" for="hasInvoiceFilter">
+                  {{ '::HasInvoice' | abpLocalization }}
+                </label>
+
+                <select
+                  name="hasInvoice"
+                  id="hasInvoiceFilter"
+                  class="form-select form-control"
+                  [(ngModel)]="filters.hasInvoice"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="list.get()"
+                >
+                  <option [ngValue]=""></option>
+                  <option [ngValue]="true">{{ 'AbpUi::Yes' | abpLocalization }}</option>
+                  <option [ngValue]="false">{{ 'AbpUi::No' | abpLocalization }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-auto">
+              <div class="mb-3">
+                <label class="form-label" for="isIssuedFilter">
+                  {{ '::IsIssued' | abpLocalization }}
+                </label>
+
+                <select
+                  name="isIssued"
+                  id="isIssuedFilter"
+                  class="form-select form-control"
+                  [(ngModel)]="filters.isIssued"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="list.get()"
+                >
+                  <option [ngValue]=""></option>
+                  <option [ngValue]="true">{{ 'AbpUi::Yes' | abpLocalization }}</option>
+                  <option [ngValue]="false">{{ 'AbpUi::No' | abpLocalization }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-auto">
+              <div class="mb-3">
+                <label class="form-label" for="minPaymentDate">
+                  {{ '::MinPaymentDate' | abpLocalization }}
+                </label>
+
+                <div class="input-group" validationTarget>
+                  <input
+                    id="minPaymentDate"
+                    class="form-control"
+                    #minPaymentDateInput
+                    #minPaymentDateDatepicker="ngbDatepicker"
+                    name="minPaymentDate"
+                    ngbDatepicker
+                    container="body"
+                    readonly
+                    (click)="minPaymentDateDatepicker.toggle()"
+                    (keyup.space)="minPaymentDateDatepicker.toggle()"
+                    [(ngModel)]="filters.paymentDateMin"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  @if (minPaymentDateInput.value) {
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-link px-2"
+                        type="button"
+                        [title]="'AbpUi::Clear' | abpLocalization"
+                        (click)="
+                          minPaymentDateDatepicker.writeValue(null);
+                          minPaymentDateDatepicker.manualDateChange(null, true)
+                        "
+                      >
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-auto">
+              <div class="mb-3">
+                <label class="form-label" for="maxPaymentDate">
+                  {{ '::MaxPaymentDate' | abpLocalization }}
+                </label>
+
+                <div class="input-group" validationTarget>
+                  <input
+                    id="maxPaymentDate"
+                    class="form-control"
+                    #maxPaymentDateInput
+                    #maxPaymentDateDatepicker="ngbDatepicker"
+                    name="maxPaymentDate"
+                    ngbDatepicker
+                    readonly
+                    (click)="maxPaymentDateDatepicker.toggle()"
+                    (keyup.space)="maxPaymentDateDatepicker.toggle()"
+                    [(ngModel)]="filters.paymentDateMax"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  @if (maxPaymentDateInput.value) {
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-link px-2"
+                        type="button"
+                        [title]="'AbpUi::Clear' | abpLocalization"
+                        (click)="
+                          maxPaymentDateDatepicker.writeValue(null);
+                          maxPaymentDateDatepicker.manualDateChange(null, true)
+                        "
+                      >
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-auto">
+              <div class="mb-3">
+                <label class="form-label" for="customerIdFilter">
+                  {{ '::Customer' | abpLocalization }}
+                </label>
+                <abp-lookup-typeahead
+                  cid="customerIdFilter"
+                  displayNameProp="surname"
+                  [getFn]="serviceDetail.getCustomerLookup"
+                  [(ngModel)]="filters.customerId"
+                  [ngModelOptions]="{ standalone: true }"
+                ></abp-lookup-typeahead>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-auto align-self-end mb-3">
+              <div class="row">
+                <div class="col-6 col-sm-auto d-grid">
+                  <button type="button" class="btn btn-outline-primary" (click)="clearFilters()">
+                    <span>{{ 'AbpUi::Clear' | abpLocalization }}</span>
+                  </button>
+                </div>
+                <div class="col-6 col-sm-auto d-grid">
+                  <button type="button" class="btn btn-primary" (click)="list.get()">
+                    <span>{{ 'AbpUi::Refresh' | abpLocalization }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--<suite-custom-code-block-4>-->
+          <!--</suite-custom-code-block-4>-->
+        </form>
+      </abp-advanced-entity-filters-form>
+    }
+  </abp-advanced-entity-filters>
+  <!--<suite-custom-code-block-5>-->
+  <!--</suite-custom-code-block-5>-->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      @if (service.selectedCount() > 0) {
+        <h4 class="card-title">
+          {{
+            '::AllItemsAreSelected'
+              | abpLocalization
+                : (service.allSelected() ? service.data.totalCount : service.selectedCount())
+          }}
+        </h4>
+
+        <div>
+          <button class="btn btn-outline-primary btn-sm" (click)="service.selectAll()">
+            @if (service.allSelected()) {
+              {{ '::ClearSelection' | abpLocalization }}
+            } @else {
+              {{ '::SelectAllItems' | abpLocalization: service.data.totalCount }}
+            }
+          </button>
+
+          <button
+            *abpPermission="'VisaFlowApp.Baskets.Delete'"
+            class="btn btn-danger btn-sm mx-1"
+            (click)="service.bulkDelete()"
+          >
+            <i class="fa fa-trash me-1" aria-hidden="true"></i>
+            {{ 'AbpUi::Delete' | abpLocalization: service.selectedCount() }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <!--<suite-custom-code-block-6>-->
+    <!--</suite-custom-code-block-6>-->
+    <div class="card-body">
+      <!--<suite-custom-code-block-7>-->
+      <!--</suite-custom-code-block-7>-->
+      <ngx-datatable
+        #basketTable
+        default
+        [rows]="service.data.items"
+        [count]="service.data.totalCount"
+        [list]="list"
+        [selected]="service.selected()"
+        [selectionType]="service.selectionType.checkbox"
+        (select)="service.onSelect($event)"
+      >
+        <!--<suite-custom-code-block-8>-->
+        <!--</suite-custom-code-block-8>-->
+
+        <ngx-datatable-column
+          [width]="40"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+        >
+          <ng-template
+            ngx-datatable-header-template
+            let-value="value"
+            let-allRowsSelected="allRowsSelected"
+            let-selectFn="selectFn"
+          >
+            @if (service.data.items.length > 0) {
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [checked]="allRowsSelected"
+                (change)="selectFn(!allRowsSelected)"
+              />
+            }
+          </ng-template>
+          <ng-template
+            ngx-datatable-cell-template
+            let-value="value"
+            let-isSelected="isSelected"
+            let-onCheckboxChangeFn="onCheckboxChangeFn"
+          >
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [checked]="isSelected"
+              (change)="onCheckboxChangeFn($event)"
+            />
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail rowHeight="100%">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <ul id="basket-nav-tabs mb-0" ngbNav #nav="ngbNav" class="nav-tabs">
+              <li
+                *abpPermission="'VisaFlowApp.BasketItems'"
+                id="basket-item-informations"
+                ngbNavItem
+              >
+                <a ngbNavLink>{{ '::BasketItem' | abpLocalization }}</a>
+
+                <ng-template ngbNavContent>
+                  <app-basket-item [basketId]="row.basket.id" />
+                </ng-template>
+              </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="m-0 fade-in-top"></div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+        @if (isChildEntitiesPermitted) {
+          <ngx-datatable-column
+            [width]="50"
+            [resizeable]="false"
+            [sortable]="false"
+            [draggable]="false"
+            [canAutoResize]="false"
+          >
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <a
+                href="javascript:void(0)"
+                class="ngx-datatable-toggle text-decoration-none text-muted fa"
+                [class.fa-angle-down]="!expanded"
+                [class.fa-angle-up]="expanded"
+                title="Expand/Collapse Row"
+                (click)="toggleExpandRow(row)"
+              >
+              </a>
+            </ng-template>
+          </ngx-datatable-column>
+        }
+
+        @if (isActionButtonVisible) {
+          <ngx-datatable-column
+            [name]="'AbpUi::Actions' | abpLocalization"
+            [maxWidth]="150"
+            [width]="150"
+            [sortable]="false"
+          >
+            <ng-template let-row="row" let-i="rowIndex" ngx-datatable-cell-template>
+              <div ngbDropdown container="body" class="d-inline-block">
+                <button
+                  class="btn btn-primary btn-sm dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  ngbDropdownToggle
+                >
+                  <i class="fa fa-cog me-1" aria-hidden="true"></i>
+                  {{ 'AbpUi::Actions' | abpLocalization }}
+                </button>
+
+                <div ngbDropdownMenu>
+                  <button
+                    ngbDropdownItem
+                    *abpPermission="'VisaFlowApp.Baskets.Edit'"
+                    (click)="update(row)"
+                  >
+                    {{ 'AbpUi::Edit' | abpLocalization }}
+                  </button>
+                  <!-- <button
+          ngbDropdownItem
+          *abpPermission="'VisaFlowApp.Transactions.Create'"
+          (click)="openTransactionDetail(row.basket.id)"
+        >
+          {{ '::AddCollection' | abpLocalization }}
+        </button> -->
+
+        <!-- … -->
+<button
+  *abpPermission="'VisaFlowApp.Transactions.Create'"
+  class="dropdown-item"
+  (click)="openAddCollection(row.basket.id)"
+>
+  {{ '::AddCollection' | abpLocalization }}
+</button>
+<button
+  *abpPermission="'VisaFlowApp.Transactions.Create'"
+  class="dropdown-item"
+  (click)="openAddCost(row.basket.id)"
+>
+  {{ '::AddCost' | abpLocalization }}
+</button>
+
+<!-- modal’ı defer ile inject edin -->
+
+<!-- … -->
+
+
+                  <button
+                    ngbDropdownItem
+                    *abpPermission="'VisaFlowApp.Baskets.Delete'"
+                    (click)="delete(row)"
+                  >
+                    {{ 'AbpUi::Delete' | abpLocalization }}
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        }
+        
+        <ngx-datatable-column name="{{ '::Customer' | abpLocalization }}" prop="customer.surname">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.customer?.name }} {{ row.customer?.surname }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+  name="{{ '::PaymentSum' | abpLocalization }}"
+  prop="paymentSum"
+  [flexGrow]="1"
+>
+  <ng-template let-row="row" ngx-datatable-cell-template>
+    {{ row.paymentSum | number:'1.2-2' }}
+  </ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column
+  name="{{ '::CollectionSum' | abpLocalization }}"
+  prop="collectionSum"
+  [flexGrow]="1"
+>
+  <ng-template let-row="row" ngx-datatable-cell-template>
+    {{ row.collectionSum | number:'1.2-2' }}
+  </ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column
+  name="{{ '::Pay/Coll Ratio' | abpLocalization }}"
+  prop="paymentToCollectionRatio"
+  [flexGrow]="1"
+>
+  <ng-template let-row="row" ngx-datatable-cell-template>
+    {{ row.paymentToCollectionRatio != null
+       ? (row.paymentToCollectionRatio | number:'1.2-2')
+       : '—' }}
+  </ng-template>
+</ngx-datatable-column>
+
+
+        <!-- <ngx-datatable-column
+          name="{{ '::PaymentDate' | abpLocalization }}"
+          prop="basket.paymentDate"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <button
+                    ngbDropdownItem
+                    *abpPermission="'VisaFlowApp.Baskets.Edit'"
+                    (click)="paymentUpdate(row)"
+                  >
+                    {{ 'AbpUi::Edit' | abpLocalization }}
+                  </button>
+
+            {{ row.basket.paymentDate | date }}
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column
+  name="{{ '::PaymentDate' | abpLocalization }}"
+  prop="basket.paymentDate"
+>
+  <ng-template let-row="row" ngx-datatable-cell-template>
+    <!-- If no paymentDate, show Edit button (if permitted) -->
+    <button
+      *ngIf="!row.basket.paymentDate"
+      ngbDropdownItem
+      (click)="paymentUpdate(row)">
+      {{ 'AbpUi::Edit' | abpLocalization }}
+    </button>
+
+    <!-- If paymentDate exists, display it -->
+    <span *ngIf="row.basket.paymentDate">
+      {{ row.basket.paymentDate | date }}
+    </span>
+  </ng-template>
+</ngx-datatable-column>
+
+        <ngx-datatable-column name="{{ '::HasInvoice' | abpLocalization }}" prop="basket.hasInvoice">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+    <ng-container *ngIf="row.basket.isIssued; else editable">
+      <!-- isIssued true ise sadece ikon -->
+      <i
+        class="fa"
+        [class.fa-check]="row.basket.hasInvoice"
+        [class.fa-times]="!row.basket.hasInvoice"
+        [class.text-success]="row.basket.hasInvoice"
+        [class.text-danger]="!row.basket.hasInvoice"
+      ></i>
+    </ng-container>
+    <ng-template #editable>
+      <!-- isIssued false ise tıklanabilir buton -->
+      <a
+        href="javascript:void(0)"
+        (click)="service.toggleHasInvoice(row.basket.id, row.basket.hasInvoice)"
+        [title]="row.basket.hasInvoice
+          ? ('AbpUi::UnsetInvoice' | abpLocalization)
+          : ('AbpUi::SetInvoice'   | abpLocalization)"
+        class="text-decoration-none"
+      >
+        <i
+          class="fa"
+          [class.fa-check]="row.basket.hasInvoice"
+          [class.fa-times]="!row.basket.hasInvoice"
+          [class.text-success]="row.basket.hasInvoice"
+          [class.text-danger]="!row.basket.hasInvoice"
+        ></i>
+      </a>
+    </ng-template>
+  </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="{{ '::IsIssued' | abpLocalization }}" prop="basket.isIssued">
+             <ng-template let-row="row" ngx-datatable-cell-template>
+               
+               <ng-container *ngIf="row.basket.hasInvoice">
+                 <a
+                   href="javascript:void(0)"
+                   (click)="service.toggleIsIssued(row.basket.id, row.basket.isIssued)"
+                   [title]="row.basket.isIssued ? 'AbpUi::UnsetIssued' : 'AbpUi::SetIssued' | abpLocalization"
+                   class="text-decoration-none"
+                 >
+                   <i class="fa"
+                      [class.fa-check]="row.basket.isIssued"
+                      [class.fa-times]="!row.basket.isIssued"
+                      [class.text-success]="row.basket.isIssued"
+                      [class.text-danger]="!row.basket.isIssued"
+                   ></i>
+                 </a>
+               </ng-container>
+             </ng-template>
+           </ngx-datatable-column>
+           
+        <ngx-datatable-column
+          name="{{ '::Application' | abpLocalization }}"
+          prop="basket.applicationId"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.basket.applicationId }}
+          </ng-template>
+        </ngx-datatable-column>
+     
+        <!--<suite-custom-code-block-9>-->
+        <!--</suite-custom-code-block-9>-->
+      </ngx-datatable>
+      <!--<suite-custom-code-block-10>-->
+      <!--</suite-custom-code-block-10>-->
+    </div>
+  </div>
+  <!--<suite-custom-code-block-11>-->
+  <!--</suite-custom-code-block-11>-->
+</abp-page>
+<!--<suite-custom-code-block-12>-->
+<!--</suite-custom-code-block-12>-->
+
+@defer (when serviceDetail.isVisible) {
+  @if (serviceDetail.isVisible) {
+    <app-basket-detail-modal />
+  }
+}
+
+@defer (when appTransactionsDetail.isVisible) {
+  @if (appTransactionsDetail.isVisible) {
+    <app-transaction-detail-modal />
+  }
+}

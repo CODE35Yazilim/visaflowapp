@@ -1,0 +1,54 @@
+<abp-page [title]="'::Menu:AgentReports' | abpLocalization">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="formFilters" (ngSubmit)="refresh()">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <abp-date-range-picker
+              formControlName="times"
+              [labelText]="'::Date' | abpLocalization"
+              startDateProp="fromDate"
+              endDateProp="toDate">
+            </abp-date-range-picker>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fa fa-refresh me-1"></i>
+              {{ '::Refresh' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+  <div class="col-lg-12">
+    
+  </div>
+  
+</div>
+
+
+
+
+<div id="DashboardWidgetsArea">
+    <div class="row">
+      
+<div class="col col-md-12 col-lg-6">
+          <app-supplier-report-widget #supplierReportWidget [height]="300"></app-supplier-report-widget>
+      </div>
+
+      <div class="col col-md-12 col-lg-6">
+          <app-product-sales-widget #productSalesWidget [height]="300"></app-product-sales-widget>
+      </div>
+
+      <div class="col col-md-12 col-lg-12" *abpPermission="'AuditLogging.AuditLogs'">
+        <app-agency-report-widget #agencyReportWidget [height]="300"></app-agency-report-widget>
+      </div>
+
+
+    </div>
+  </div>
+
+</abp-page>
